@@ -31,7 +31,7 @@ public class Position {
 		this.coordinate = coordinate;
 	}
 
-	public Direction getdirection() {
+	public Direction getDirection() {
 		return direction;
 	}
 
