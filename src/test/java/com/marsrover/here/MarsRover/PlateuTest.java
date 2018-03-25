@@ -17,19 +17,19 @@ public class PlateuTest {
 
 	@Before
 	public void setup() {
-		rightTopBoundary = new Coordinate(3, 3);
+		rightTopBoundary = new Coordinate(5, 5);
 		plateu = Plateu.getInstance(rightTopBoundary);
 	}
 
 	@Test
 	public void testOutsideBoundary_MaxX() {
-		roverOutOfBoundaryCoordinate = new Coordinate(4, 3);
+		roverOutOfBoundaryCoordinate = new Coordinate(6, 3);
 		assertFalse(plateu.insideBoundary(roverOutOfBoundaryCoordinate));
 	}
 
 	@Test
 	public void testOutsideBoundary_MaxY() {
-		roverOutOfBoundaryCoordinate = new Coordinate(3, 4);
+		roverOutOfBoundaryCoordinate = new Coordinate(3, 6);
 		assertFalse(plateu.insideBoundary(roverOutOfBoundaryCoordinate));
 	}
 	
@@ -47,7 +47,7 @@ public class PlateuTest {
 
 	@Test
 	public void testInsideBoundary() {
-		roverOutOfBoundaryCoordinate = new Coordinate(3, 3);
+		roverOutOfBoundaryCoordinate = new Coordinate(5, 5);
 		assertTrue(plateu.insideBoundary(roverOutOfBoundaryCoordinate));
 	}
 
@@ -59,7 +59,7 @@ public class PlateuTest {
 	
 	@Test
 	public void testDuplicateInstance() {
-		rightTopBoundary = new Coordinate(5, 5);
+		rightTopBoundary = new Coordinate(3, 3);
 		plateu = Plateu.getInstance(rightTopBoundary);
 		assertFalse(plateu.getTopRight().equals(rightTopBoundary));
 	}

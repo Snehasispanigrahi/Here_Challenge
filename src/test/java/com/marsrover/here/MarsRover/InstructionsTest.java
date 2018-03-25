@@ -5,26 +5,26 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.marsrover.here.MarsRover.Model.Instructions;
+import com.marsrover.here.MarsRover.Model.Instruction;
 
 public class InstructionsTest {
 
 	@Test
 	public void testIsValid() {
-		assertTrue(Instructions.isValid('L'));
+		assertTrue(Instruction.isValid('L'));
 
-		assertTrue(Instructions.isValid('R'));
+		assertTrue(Instruction.isValid('R'));
 
-		assertTrue(Instructions.isValid('M'));
+		assertTrue(Instruction.isValid('M'));
 
-		assertFalse(Instructions.isValid('N'));
+		assertFalse(Instruction.isValid('N'));
 	}
-	
+
 	@Test
 	public void testIsSpinOperation() {
-		assertTrue(Instructions.isSpinOperation('L'));
-		assertTrue(Instructions.isSpinOperation('R'));
-		assertFalse(Instructions.isSpinOperation('M'));
+		assertTrue(Instruction.L.isSpinOperation());
+		assertTrue(Instruction.R.isSpinOperation());
+		assertFalse(Instruction.M.isSpinOperation());
 	}
-	
+
 }

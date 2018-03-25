@@ -28,8 +28,9 @@ public class MainApp {
 		// 2. Instruction String
 		String roverInstruction_Input;
 		File file = new File(args[0]);
+		Scanner sc = null;
 		try {
-			Scanner sc = new Scanner(file);
+			sc = new Scanner(file);
 			if (sc.hasNextLine())
 				boundary_Input = sc.nextLine();
 			else
@@ -56,6 +57,8 @@ public class MainApp {
 			}
 		} catch (FileNotFoundException e) {
 			throw new FileNotFoundException("Invalid file input!");
+		} finally {
+			sc.close();
 		}
 	}
 }

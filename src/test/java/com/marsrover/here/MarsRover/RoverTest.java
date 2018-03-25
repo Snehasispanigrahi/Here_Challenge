@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.marsrover.here.MarsRover.Model.Coordinate;
 import com.marsrover.here.MarsRover.Model.Direction;
+import com.marsrover.here.MarsRover.Model.Instruction;
 import com.marsrover.here.MarsRover.Model.Plateu;
 import com.marsrover.here.MarsRover.Model.Position;
 import com.marsrover.here.MarsRover.Model.Rover;
@@ -86,11 +87,25 @@ public class RoverTest {
 
 		assertEquals(expectedFinalPosition, rover.getPosition());
 	}
+	
+	@Test
+	public void testRoverFinalPosition_3() {
+		setup(Direction.N, new Coordinate(2, 2));
+		rover.setInstruction("LMMMMMMLMMMMM");
+		
+		expectedFinalPosition = new Position();
+		coordinate = new Coordinate(0, 0);
+		direction = Direction.S;
+		expectedFinalPosition.setCoordinate(coordinate);
+		expectedFinalPosition.setDirection(direction);
+
+		assertEquals(expectedFinalPosition, rover.getPosition());
+	}
 
 	@Test
 	public void testRoverSpin() {
 		setup();
-		rover.spin('R', 3);
+		rover.spin(Instruction.R, 3);
 		assertEquals("N", rover.getPosition().getDirection().toString());
 	}
 

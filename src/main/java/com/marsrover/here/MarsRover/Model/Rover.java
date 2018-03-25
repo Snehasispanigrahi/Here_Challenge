@@ -18,31 +18,33 @@ public class Rover {
 			throw new IllegalArgumentException("Invalid initial position");
 		this.position = position;
 	}
-	
+
 	public void setInstruction(String instructions) {
-		
+
 		int sameInstructionCount = 0;
-		char lastInstruction = 0;
-		
+		Instruction lastInstruction = null;
+
 		for (int i = 0; i < instructions.toCharArray().length; i++) {
-			char currentInstruction = instructions.toCharArray()[i];
-			
-			if(i == 0) lastInstruction = currentInstruction; 
-			if(Instructions.isValid(currentInstruction)) {
-				if(currentInstruction != lastInstruction) {
-					spinOrMove(sameInstructionCount, lastInstruction);
-					sameInstructionCount = 1;
-					lastInstruction = currentInstruction;
-				} else {
-					//Same instruction as previous, store the repetition
-					sameInstructionCount++;
-				}
-				
-				if (i == instructions.toCharArray().length - 1) {
-					spinOrMove(sameInstructionCount, lastInstruction);
-				}
+			char currentInstructionChar = instructions.toCharArray()[i];
+			if (!Instruction.isValid(currentInstructionChar))
+				throw new IllegalArgumentException("Instruction not recognized");
+			Instruction currentInstruction = Instruction.valueOf(Character.toString(currentInstructionChar));
+
+			if (i == 0)
+				lastInstruction = currentInstruction;
+			if (currentInstruction != lastInstruction) {
+				spinOrMove(sameInstructionCount, lastInstruction);
+				sameInstructionCount = 1;
+				lastInstruction = currentInstruction;
+			} else {
+				// Same instruction as previous, store the repetition
+				sameInstructionCount++;
 			}
-			
+
+			if (i == instructions.toCharArray().length - 1) {
+				spinOrMove(sameInstructionCount, lastInstruction);
+			}
+
 		}
 	}
 
@@ -50,12 +52,12 @@ public class Rover {
 	 * @param sameInstructionCount
 	 * @param lastInstruction
 	 */
-	private void spinOrMove(int sameInstructionCount, char lastInstruction) {
-		if(Instructions.isSpinOperation(lastInstruction)) {
-			//Spin
+	private void spinOrMove(int sameInstructionCount, Instruction lastInstruction) {
+		if (lastInstruction.isSpinOperation()) {
+			// Spin
 			spin(lastInstruction, sameInstructionCount);
 		} else {
-			//Move fwd
+			// Move fwd
 			forwardMove(sameInstructionCount);
 		}
 	}
@@ -95,56 +97,53 @@ public class Rover {
 		getPosition().getCoordinate().setY(y);
 	}
 
-	final static char[] NESW = { 'N', 'E', 'S', 'W' };// Right movement sorted
-	
-	public void spin(char lastInstruction, int sameInstructionCount) {
-		if(lastInstruction == 'R') {
-			if(sameInstructionCount > 3)
-				sameInstructionCount %= 4;
-			
-			if(sameInstructionCount != 0) {
-				int fwdMovesPossibleInArray = 0;
-				int finalDirectionIndex = -1;
-				for (int i = 0; i < NESW.length; i++) {
-					if (getPosition().getDirection().toString().equals(Character.toString(NESW[i]))) {
-						fwdMovesPossibleInArray = (NESW.length - 1) - i;
-						if (sameInstructionCount <= fwdMovesPossibleInArray)
-							finalDirectionIndex = i + sameInstructionCount;
-						else
-							finalDirectionIndex = sameInstructionCount - fwdMovesPossibleInArray - 1;
-
-						break;
-					}
-				}
-				Direction currentDirection = Direction.valueOf(Character.toString(NESW[finalDirectionIndex]));
-				getPosition().setDirection(currentDirection);
-			}
-		} else if(lastInstruction == 'L') {
+	public void spin(Instruction lastInstruction, int sameInstructionCount) {
+		switch (lastInstruction) {
+		case R:
 			if (sameInstructionCount > 3)
 				sameInstructionCount %= 4;
+
+			if (sameInstructionCount != 0) {
+				int fwdMovesPossibleInArray = 0;
+				int finalDirectionIndex = -1;
+				int index = getPosition().getDirection().getIndex();
+				fwdMovesPossibleInArray = (Direction.values().length - 1) - index;
+				if (sameInstructionCount <= fwdMovesPossibleInArray)
+					finalDirectionIndex = index + sameInstructionCount;
+				else
+					finalDirectionIndex = sameInstructionCount - fwdMovesPossibleInArray - 1;
+				for (Direction d : Direction.values()) {
+					if (d.getIndex() == finalDirectionIndex)
+						getPosition().setDirection(d);
+				}
+			}
+			break;
+		case L:
+			if (sameInstructionCount > 3)
+				sameInstructionCount %= 4;
+
 			if (sameInstructionCount != 0) {
 				int finalDirectionIndex = -1;
-				for (int i = 0; i < NESW.length; i++) {
-					if (getPosition().getDirection().toString().equals(Character.toString(NESW[i]))) {
-						if (sameInstructionCount <= i)
-							finalDirectionIndex = i - sameInstructionCount;
-						else {
-							int possibleBackwardMoves = i;
-							if (possibleBackwardMoves < 0)
-								possibleBackwardMoves = 0;
-							sameInstructionCount -= possibleBackwardMoves;
-							finalDirectionIndex = NESW.length - sameInstructionCount;
-						}
-
-						break;
-					}
+				int index = getPosition().getDirection().getIndex();
+				if (sameInstructionCount <= index)
+					finalDirectionIndex = index - sameInstructionCount;
+				else {
+					int possibleBackwardMoves = index;
+					if (possibleBackwardMoves < 0)
+						possibleBackwardMoves = 0;
+					sameInstructionCount -= possibleBackwardMoves;
+					finalDirectionIndex = Direction.values().length - sameInstructionCount;
 				}
-				Direction currentDirection = Direction.valueOf(Character.toString(NESW[finalDirectionIndex]));
-				getPosition().setDirection(currentDirection);
+				for (Direction d : Direction.values()) {
+					if (d.getIndex() == finalDirectionIndex)
+						getPosition().setDirection(d);
+				}
 			}
+			break;
 		}
+
 	}
-	
+
 	public Plateu getPlateu() {
 		return plateu;
 	}
