@@ -4,38 +4,49 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.marsrover.here.MarsRover.Model.Coordinate;
 import com.marsrover.here.MarsRover.Model.Direction;
+import com.marsrover.here.MarsRover.Model.Plateu;
 import com.marsrover.here.MarsRover.Model.Position;
 import com.marsrover.here.MarsRover.Model.Rover;
 
 public class RoverTest {
-	
+
 	Rover rover;
 	Position initialPosition;
 	Coordinate coordinate;
 	Direction direction;
+
+	Position expectedFinalPosition;
 	
-	Position expectedPosition;
-	
+	Plateu plateu;
+
 	@Before
 	public void setup() {
-		initialPosition = new Position();
-		coordinate = new Coordinate(3, 3);
-		direction = Direction.E;
-		initialPosition.setCoordinate(coordinate);
-		initialPosition.setDirection(direction);
-		rover = new Rover(initialPosition);
+		setup(null, null);
 	}
 	
+	public void setup(Direction direction, Coordinate coordinate) {
+		initialPosition = new Position();
+		if(coordinate == null)
+			coordinate = new Coordinate(3, 3);
+		if(direction == null)
+			direction = Direction.E;
+		initialPosition.setCoordinate(coordinate);
+		initialPosition.setDirection(direction);
+		
+		plateu = Plateu.getInstance(new Coordinate(5, 5));
+		rover = new Rover(plateu);
+		rover.setPosition(initialPosition);
+	}
+
 	@Test
 	public void testRoverNotNull() {
 		assertNotNull(rover);
 	}
-	
+
 	@Test
 	public void testRoverPositionNotNull() {
 		assertNotNull(rover.getPosition().getCoordinate());
@@ -43,29 +54,84 @@ public class RoverTest {
 		assertNotNull(rover.getPosition());
 	}
 	
-	@Ignore
+	@Test
+	public void testRoverPlateuNotNull() {
+		assertNotNull(rover.getPlateu());
+	}
+	
+	@Test
+	public void testRoverFinalPosition_1() {
+		setup(Direction.N, new Coordinate(1, 2));
+		rover.setInstruction("LMLMLMLMM");
+		
+		expectedFinalPosition = new Position();
+		coordinate = new Coordinate(1, 3);
+		direction = Direction.N;
+		expectedFinalPosition.setCoordinate(coordinate);
+		expectedFinalPosition.setDirection(direction);
+
+		assertEquals(expectedFinalPosition, rover.getPosition());
+	}
+	
+	@Test
+	public void testRoverFinalPosition_2() {
+		setup(Direction.E, new Coordinate(3, 3));
+		rover.setInstruction("MMRMMRMRRM");
+		
+		expectedFinalPosition = new Position();
+		coordinate = new Coordinate(5, 1);
+		direction = Direction.E;
+		expectedFinalPosition.setCoordinate(coordinate);
+		expectedFinalPosition.setDirection(direction);
+
+		assertEquals(expectedFinalPosition, rover.getPosition());
+	}
+
+	@Test
 	public void testRoverSpin() {
+		setup();
 		rover.spin('R', 3);
 		assertEquals("N", rover.getPosition().getDirection().toString());
 	}
-	
-	@Ignore
+
+	@Test
 	public void testRoverMoveFwd() {
-		rover.forwardMove(3);
-		coordinate = new Coordinate(6, 3);
+		setup();
+		rover.forwardMove(2);
+		coordinate = new Coordinate(5, 3);
 		assertEquals(coordinate, rover.getPosition().getCoordinate());
 	}
-	
-	@Ignore
-	public void testRoverFinalPosition() {
-		expectedPosition = new Position();
-		coordinate = new Coordinate(5, 1);
-		direction = Direction.E;
-		expectedPosition.setCoordinate(coordinate);
-		expectedPosition.setDirection(direction);
-		
-		rover.setInstruction("MMRMMRMRRM");
-		assertEquals(expectedPosition, rover.getPosition());
+
+	@Test
+	public void testRoverMoveFwdBeyondMaxX() {
+		setup(Direction.E, null);
+		rover.forwardMove(3);
+		assertEquals(plateu.getTopRight().getX(), rover.getPosition().getCoordinate().getX());
 	}
 
+	@Test
+	public void testRoverMoveFwdBeyondMaxY() {
+		setup(Direction.N, null);
+		rover.forwardMove(3);
+		assertEquals(plateu.getTopRight().getY(), rover.getPosition().getCoordinate().getY());
+	}
+
+	@Test
+	public void testRoverMoveFwdBeyondMinY() {
+		setup(Direction.S, null);
+		rover.forwardMove(4);
+		assertEquals(plateu.getBottomLeft().getY(), rover.getPosition().getCoordinate().getY());
+	}
+
+	@Test
+	public void testRoverMoveFwdBeyondMinX() {
+		setup(Direction.W, null);
+		rover.forwardMove(4);
+		assertEquals(plateu.getBottomLeft().getX(), rover.getPosition().getCoordinate().getX());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testRoverInvalidInitialPosition() {
+		setup(null, new Coordinate(-1, 0));
+	}
 }

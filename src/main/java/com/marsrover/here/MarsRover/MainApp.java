@@ -45,8 +45,9 @@ public class MainApp {
 					// Get the co-ordinates out of the boundary co-ordinate and rover position
 					Coordinate boundaryCoordinate = Coordinate.parseCoordinate(boundary_Input);
 					Position roverInitialPosition = Position.parsePosition(roverPosition_Input);
-					Plateu plateu = new Plateu(boundaryCoordinate);
-					Rover rover = new Rover(roverInitialPosition);
+					Plateu plateu = Plateu.getInstance(boundaryCoordinate);
+					Rover rover = new Rover(plateu);
+					rover.setPosition(roverInitialPosition);
 					rover.setInstruction(roverInstruction_Input);
 					System.out.println(rover.getPosition().toString());
 				} else {

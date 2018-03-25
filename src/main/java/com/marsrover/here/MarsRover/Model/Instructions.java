@@ -3,9 +3,11 @@ package com.marsrover.here.MarsRover.Model;
 public enum Instructions {
 	L, R, M;
 
-	public static boolean isValid(char instruction) {
-		if (instruction == 'L' || instruction == 'M' || instruction == 'R')
-			return true;
+	public static boolean isValid(char instructionChar) {
+		for (Instructions instruction : Instructions.values()) {
+			if (instruction.name().equals(Character.toString(instructionChar)))
+				return true;
+		}
 		return false;
 	}
 

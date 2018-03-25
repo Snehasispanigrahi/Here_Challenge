@@ -2,10 +2,11 @@ package com.marsrover.here.MarsRover.Model;
 
 public class Rover {
 	private Position position;
+	private final Plateu plateu;
 
-	public Rover(Position initialPosition) {
+	public Rover(Plateu plateu) {
 		super();
-		this.position = initialPosition;
+		this.plateu = plateu;
 	}
 
 	public Position getPosition() {
@@ -13,15 +14,12 @@ public class Rover {
 	}
 
 	public void setPosition(Position position) {
+		if (position.getCoordinate().getX() < 0 || position.getCoordinate().getY() < 0)
+			throw new IllegalArgumentException("Invalid initial position");
 		this.position = position;
 	}
 	
 	public void setInstruction(String instructions) {
-		
-		//Read the instruction
-		//We will do the same operations at a time
-		//So, while reading when we see a change in the instruction
-		//then rover will operate on the previous instruction
 		
 		int sameInstructionCount = 0;
 		char lastInstruction = 0;
@@ -68,16 +66,28 @@ public class Rover {
 
 		switch (getPosition().getDirection()) {
 		case N:
-			y += sameInstructionCount;
+			if (plateu.insideBoundary(new Coordinate(x, y + sameInstructionCount)))
+				y += sameInstructionCount;
+			else
+				y = plateu.getTopRight().getY();
 			break;
 		case W:
-			x -= sameInstructionCount;
+			if (plateu.insideBoundary(new Coordinate(x - sameInstructionCount, y)))
+				x -= sameInstructionCount;
+			else
+				x = plateu.getBottomLeft().getX();
 			break;
 		case S:
-			y -= sameInstructionCount;
+			if (plateu.insideBoundary(new Coordinate(x, y - sameInstructionCount)))
+				y -= sameInstructionCount;
+			else
+				y = plateu.getBottomLeft().getY();
 			break;
 		case E:
-			x += sameInstructionCount;
+			if (plateu.insideBoundary(new Coordinate(x + sameInstructionCount, y)))
+				x += sameInstructionCount;
+			else
+				x = plateu.getTopRight().getX();
 			break;
 		}
 
@@ -133,5 +143,9 @@ public class Rover {
 				getPosition().setDirection(currentDirection);
 			}
 		}
+	}
+	
+	public Plateu getPlateu() {
+		return plateu;
 	}
 }

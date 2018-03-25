@@ -54,4 +54,11 @@ public class Coordinate {
 		this.y = y;
 	}
 
+	public boolean withIn(Coordinate floor, Coordinate ceil) {
+		if ((this.getX() >= floor.getX() && this.getX() <= ceil.getX())
+				&& (this.getY() >= floor.getY() && this.getY() <= ceil.getY()))
+			return true;
+		return false;
+	}
+
 }
