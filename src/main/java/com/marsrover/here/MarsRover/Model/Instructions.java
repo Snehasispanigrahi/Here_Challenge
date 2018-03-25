@@ -1,4 +1,4 @@
-package com.marsrover.here.MarsRover;
+package com.marsrover.here.MarsRover.Model;
 
 public enum Instructions {
 	L, R, M;

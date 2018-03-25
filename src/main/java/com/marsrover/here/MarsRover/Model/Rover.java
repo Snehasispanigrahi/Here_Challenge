@@ -1,4 +1,4 @@
-package com.marsrover.here.MarsRover;
+package com.marsrover.here.MarsRover.Model;
 
 public class Rover {
 	private Position position;
@@ -16,16 +16,6 @@ public class Rover {
 		this.position = position;
 	}
 	
-	public Position spin(Direction direction) {
-		
-		return position;
-	}
-	
-	public Position forwardMove(int moves) {
-		
-		return position;
-	}
-
 	public void setInstruction(String instructions) {
 		
 		//Read the instruction
@@ -68,11 +58,11 @@ public class Rover {
 			spin(lastInstruction, sameInstructionCount);
 		} else {
 			//Move fwd
-			moveFwd(sameInstructionCount);
+			forwardMove(sameInstructionCount);
 		}
 	}
 
-	private void moveFwd(int sameInstructionCount) {
+	public void forwardMove(int sameInstructionCount) {
 		int x = getPosition().getCoordinate().getX();
 		int y = getPosition().getCoordinate().getY();
 
@@ -97,7 +87,7 @@ public class Rover {
 
 	final static char[] NESW = { 'N', 'E', 'S', 'W' };// Right movement sorted
 	
-	private void spin(char lastInstruction, int sameInstructionCount) {
+	public void spin(char lastInstruction, int sameInstructionCount) {
 		if(lastInstruction == 'R') {
 			if(sameInstructionCount > 3)
 				sameInstructionCount %= 4;
@@ -129,7 +119,7 @@ public class Rover {
 						if (sameInstructionCount <= i)
 							finalDirectionIndex = i - sameInstructionCount;
 						else {
-							int possibleBackwardMoves = i - sameInstructionCount;
+							int possibleBackwardMoves = i;
 							if (possibleBackwardMoves < 0)
 								possibleBackwardMoves = 0;
 							sameInstructionCount -= possibleBackwardMoves;

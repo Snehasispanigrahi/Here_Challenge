@@ -1,4 +1,4 @@
-package com.marsrover.here.MarsRover;
+package com.marsrover.here.MarsRover.Service;
 
 public class Util {
 	public static String[] splitByWhitespace(String input) {

@@ -1,4 +1,4 @@
-package com.marsrover.here.MarsRover;
+package com.marsrover.here.MarsRover.Model;
 
 public final class Plateu {
 	Coordinate topRight;
