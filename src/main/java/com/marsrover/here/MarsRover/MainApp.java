@@ -20,7 +20,7 @@ public class MainApp {
 	public static void main(String[] args) throws FileNotFoundException {
 		if (args[0] == null || args[0].isEmpty())
 			throw new IllegalArgumentException("No data in file");
-		System.out.println("Reading file: " + args[0]);
+//		System.out.println("Reading file: " + args[0]);
 		// Plateu boundary right top
 		String boundary_Input;
 		// 1. Rover's initial position (Co-ordinate, Direction)
@@ -41,7 +41,7 @@ public class MainApp {
 					roverInstruction_Input = sc.nextLine();
 				else
 					throw new IllegalArgumentException("Invalid data!");
-				System.out.println("Rover initial position: " + roverPosition_Input + ", Instruction: " + roverInstruction_Input);
+//				System.out.println("Rover initial position: " + roverPosition_Input + ", Instruction: " + roverInstruction_Input);
 				if (Util.notEmpty(boundary_Input) && Util.notEmpty(roverPosition_Input) && Util.notEmpty(roverInstruction_Input)) {
 					// Get the co-ordinates out of the boundary co-ordinate and rover position
 					Coordinate boundaryCoordinate = Coordinate.parseCoordinate(boundary_Input);
