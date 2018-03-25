@@ -15,8 +15,6 @@ import com.marsrover.here.MarsRover.Service.Util;
  *
  */
 public class MainApp {
-	final static char[] NESW = { 'N', 'E', 'S', 'W' };// Right movement sorted
-
 	public static void main(String[] args) throws FileNotFoundException {
 		if (args[0] == null || args[0].isEmpty())
 			throw new IllegalArgumentException("No data in file");
